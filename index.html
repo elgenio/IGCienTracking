@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>IGCien</title>
+  <link rel="stylesheet" href="assets/demo.css">
+
+  <script src="build/tracking-min.js"></script>
+  <script src="build/data/face-min.js"></script>
+
+
+
+  <style>
+  video, canvas {
+    margin-left: 230px;
+    margin-top: 120px;
+    position: absolute;
+  }
+  </style>
+</head>
+<body>
+  <div class="demo-title">
+    <p> Be IGCien or not to be </p>
+  </div>
+<img id="scream" src="assets/Crown.png" alt="The Scream" width="0" height="0">
+<img id="igcien" src="assets/IGCien.png" alt="IGCien" width="0" height="0">
+  <div class="demo-frame">
+    <div class="demo-container">
+      <video id="video" width="320" height="240" preload autoplay loop muted></video>
+      <canvas id="canvas" width="320" height="240"></canvas>
+      <canvas id="canvas2" width="320" height="300"></canvas>
+        <button class="capture" id="capt" onclick="startRecording()" >Capture</button>
+    </div>
+  </div>
+
+  <script>
+  var i=5;
+    window.onload = function() {
+      var video = document.getElementById('video');
+      var canvas = document.getElementById('canvas');
+      var context = canvas.getContext('2d');
+
+      var tracker = new tracking.ObjectTracker('face');
+      tracker.setInitialScale(4);
+      tracker.setStepSize(2);
+      tracker.setEdgesDensity(0.1);
+
+      tracking.track('#video', tracker, { camera: true });
+
+      tracker.on('track', function(event) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        event.data.forEach(function(rect) {
+       
+         
+          var img = document.getElementById("scream");
+           var img2 = document.getElementById("igcien");
+context.drawImage(img, rect.x+10, rect.y-60, rect.width*0.8,rect.height*0.7);
+
+          context.drawImage(img2, rect.x+40, rect.y-60, rect.width+i,rect.height/2);
+          if(i==5) i=0
+            else i=5;
+          
+        });
+      });
+
+    };
+      function startRecording() {
+  var data = canvas.toDataURL();  
+ var canvas2 = document.getElementById('canvas2');
+ var context = canvas2.getContext('2d');
+context.drawImage(data, 0, 0, 320,240);
+  }
+   
+  </script>
+
+</body>
+</html>
